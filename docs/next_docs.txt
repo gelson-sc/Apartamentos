@@ -1,0 +1,6 @@
+create project
+npx create-next-app@14.1.4 ou npx create-next-app@latest
+
+npm run dev
+
+git ls-files --others --exclude-standard

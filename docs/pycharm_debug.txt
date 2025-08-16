@@ -1,0 +1,26 @@
+Para debugar o Django no PyCharm usando o container Docker, siga estes passos:
+No PyCharm, vá em:
+Run > Edit Configurations...
+Clique no + e escolha:
+Django Server
+Configure assim:
+Host: 0.0.0.0
+Porta: 8000
+Environment variables: aponte para seu arquivo .env.local ou defina as variáveis necessárias.
+Python interpreter:
+Clique em “...” e selecione “Add Remote Interpreter” > Docker Compose.
+Service: api
+Configuration file(s): local.yml
+Environment: local (se pedir)
+Salve e execute em modo Debug.
+Assim, o PyCharm irá debugar o código rodando dentro do container Docker,
+usando o serviço api definido no seu local.yml.
+Para conectar o PostgreSQL do container via pgAdmin4 (rodando no seu PC), use estas configurações:
+
+Host: localhost
+Porta: 5433
+Usuário: postgres (ou o definido em POSTGRES_USER)
+Senha: a definida em POSTGRES_PASSWORD no seu .env.local
+Database: estate (ou o nome do seu banco)
+Assim, o pgAdmin4 acessa o PostgreSQL exposto na porta 5433 do seu host,
+que é redirecionada para a porta 5432 do container.

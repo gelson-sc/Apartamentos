@@ -1,0 +1,9 @@
+
+listar bancos
+ \l
+ listar tabelas
+ \dt
+ psql -d estate;
+ 
+\list 
+\connect

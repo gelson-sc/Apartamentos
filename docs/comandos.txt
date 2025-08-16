@@ -1,0 +1,73 @@
+npx gitignore python
+git init -b main
+django-admin startproject config .
+chore: initialize django project
+
+instalar pacotes
+pip install python-dotenv djangorestframework django-autoslug django-countries django-phonenumber-field phonenumbers drf-yasg pillow argon2-cffi djoser django-taggit django-filter django-celery-email cloudinary django-celery-beat redis celery flower 
+#dev
+pip install psycopg2-binary watchfiles black
+
+criar requeriments
+mkdir -p requirements && touch requirements/{base,local,production}.txt
+
+python -c "import secrets; print(secrets.token_urlsafe(38))"
+
+# DOCKER
+docker network create estate_prod_nw
+docker --version
+docker-compose --version
+FROM docker.io/3.13.5-slim-bookworm as python
+
+docker network create estate_local_nw
+docker network create estate_prod_nw
+
+#valida e exibe a configuração final do seu arquivo Docker Compose após processar todas as diretivas.
+docker compose -f local.yml config
+# Ver apenas um serviço específico
+docker compose -f local.yml config postgres
+# Validar antes de fazer up
+docker compose -f local.yml config && docker compose -f local.yml up
+
+# RUN 
+docker compose -f local.yml up --build -d --remove-orphans
+docker compose -f local.yml stop
+docker compose -f local.yml down -v
+docker compose -f local.yml logs postgres
+
+docker volume inspect api_estate_local_postgres_data
+
+docker compose -f local.yml build --no-cache api
+
+# rodar manualmente
+docker run -it --rm python:3.13.5-slim-bookworm /bin/bash
+apt-get update && apt-get install --no-install-recommends -y gnupg sudo git bash-completion nano ssh libpq-dev gettext
+
+# conectar banco
+docker compose -f local.yml exec postgres psql -U postgres
+docker compose -f local.yml logs postgres
+docker compose -f local.yml exec postgres psql -U postgres -d estate
+
+docker-compose -f local.yml down
+docker-compose -f local.yml up --build
+docker logs estate_client
+docker-compose -f local.yml build api
+docker-compose -f local.yml up api
+
+Volumes
+docker volume ls
+docker volume inspect api_logs_store
+docker run -it --rm -v api_logs_store:/dados alpine ls /dados
+docker run -it --rm -v api_logs_store:/dados alpine sh
+Copiar para maquina local
+docker run --rm -v api_logs_store:/dados -v $(pwd)/backup:/backup alpine cp -r /dados/. /backup/
+
+# run comands django
+create app
+docker compose -f local.yml run --rm api python manager.py startapp reports
+
+ERRO PERMISSAO
+rm -rf ./staticfiles
+mkdir ./staticfiles
+sudo chown -R $USER:$USER ./staticfiles
+sudo chmod -R 777 ./staticfiles
