@@ -5,6 +5,8 @@ FROM python AS python-build-stage
 
 ARG BUILD_ENVIRONMENT=local
 
+#RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
 RUN apt-get update && apt-get install --no-install-recommends -y \
   build-essential \
   libpq-dev
@@ -74,6 +76,5 @@ RUN mkdir -p ${APP_HOME}/staticfiles/admin && \
 # The entrypoint script will now handle permissions for the mounted volume
 # RUN chown -R django:django ${APP_HOME}/staticfiles && chmod -R 777 ${APP_HOME}/staticfiles
 USER django
-RUN pip install --no-cache-dir -r ./requirements.txt
 
 ENTRYPOINT [ "/entrypoint" ]
