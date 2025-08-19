@@ -13,7 +13,7 @@ if path.isfile(local_env_file):
     load_dotenv(local_env_file)
 
 SECRET_KEY = getenv("DJANGO_SECRET_KEY")
-CSRF_TRUSTED_ORIGINS = ["http://localhost:8080"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8080", "http://127.0.0.1:8080"]
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
 
