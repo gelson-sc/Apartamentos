@@ -3,8 +3,8 @@ services:
     build:
       context: .
       dockerfile: ./docker/local/django/Dockerfile
-    image: estate_prod_api
-    container_name: estate_prod_api
+    image: apart_prod_api
+    container_name: apart_prod_api
     volumes:
       - .:/app:z
       - ./staticfiles:/app/staticfiles
@@ -20,45 +20,45 @@ services:
       - redis
     command: /start
     networks:
-      - estate_prod_nw
+      - apart_prod_nw
 
   postgres:
     build:
       context: .
       dockerfile: ./docker/local/postgres/Dockerfile
-    image: estate_prod_postgres
-    container_name: estate_prod_postgres
+    image: apart_prod_postgres
+    container_name: apart_prod_postgres
     ports:
       - "5434:5432"
     volumes:
-      - estate_prod_postgres_data:/var/lib/postgresql/data
+      - apart_prod_postgres_data:/var/lib/postgresql/data
     env_file:
       - ./.envs/.env.local
     networks:
-      - estate_prod_nw
+      - apart_prod_nw
 
   mailpit:
     image: docker.io/axllent/mailpit:v1.15
-    container_name: estate_prod_mailpit
+    container_name: apart_prod_mailpit
     ports:
       - "8025:8025"
       - "1025:1025"
     volumes:
-      - estate_prod_mailpit_data:/data
+      - apart_prod_mailpit_data:/data
     environment:
       MP_MAX_MESSAGES: 5000
       MP_DATA_FILE: /data/mailpit.db
       MP_SMTP_AUTH_ACCEPT_ANY: 1
       MP_SMTP_AUTH_ALLOW_INSECURE: 1
     networks:
-      - estate_prod_nw
+      - apart_prod_nw
 
   client:
     build:
       context: ./client
       dockerfile: ./docker/local/Dockerfile
-    container_name: estate_client
-    image: estate_client
+    container_name: apart_client
+    image: apart_client
     environment:
       - HOSTNAME=0.0.0.0
     #    ports:
@@ -72,33 +72,33 @@ services:
     # environment:
     #   - WATCHPACK_POLLING=true
     networks:
-      - estate_prod_nw
+      - apart_prod_nw
 
   redis:
     image: redis:7.0-alpine3.19
     command: redis-server --appendonly yes
-    container_name: estate_redis
+    container_name: apart_redis
     volumes:
-      - estate_redis_prod_data:/data
+      - apart_redis_prod_data:/data
     networks:
-      - estate_prod_nw
+      - apart_prod_nw
 
   celeryworker:
     <<: *api
-    image: estate_prod_celeryworker
-    container_name: estate_prod_celeryworker
+    image: apart_prod_celeryworker
+    container_name: apart_prod_celeryworker
     command: /start-celeryworker
 
   celerybeat:
     <<: *api
-    image: estate_prod_celerybeat
-    container_name: estate_prod_celerybeat
+    image: apart_prod_celerybeat
+    container_name: apart_prod_celerybeat
     command: /start-celerybeat
 
   flower:
     <<: *api
-    image: estate_prod_flower
-    container_name: estate_prod_flower
+    image: apart_prod_flower
+    container_name: apart_prod_flower
     ports:
       - "5555:5555"
     command: /start-flower
@@ -109,7 +109,7 @@ services:
       context: ./docker/local/nginx
       dockerfile: Dockerfile
     restart: always
-    container_name: estate_nginx
+    container_name: apart_nginx
     ports:
       - "8080:80"
     volumes:
@@ -118,17 +118,17 @@ services:
     depends_on:
       - api
     networks:
-      - estate_prod_nw
+      - apart_prod_nw
 
 
 networks:
-  estate_prod_nw:
+  apart_prod_nw:
     external: true
 
 volumes:
-  estate_prod_postgres_data: { }
-  estate_prod_mailpit_data: { }
+  apart_prod_postgres_data: { }
+  apart_prod_mailpit_data: { }
   logs_store: { }
-  estate_redis_prod_data: { }
+  apart_redis_prod_data: { }
 
 

@@ -9,10 +9,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   build-essential \
   libpq-dev
 
-COPY ./requirements /requeirements
+COPY ./requirements.txt /requirements.txt
 
-RUN pip wheel --wheel-dir /usr/src/app/wheels \
-  -r requeirements/${BUILD_ENVIRONMENT}.txt
+RUN pip wheel --wheel-dir /usr/src/app/wheels -r requirements.txt
 
 # Stage 2: Python run stage.
 FROM python AS python-run-stage
@@ -44,10 +43,10 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 
 RUN addgroup --system django && \
   adduser --system --ingroup django django && \
+  echo "django ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/django && \
   mkdir -p ${APP_HOME}/staticfiles && \
   chown django:django ${APP_HOME}/staticfiles && \
-  chmod 775 ${APP_HOME}/staticfiles -R  && \
-  chmod 777 ./staticfiles -R
+  chmod 775 ${APP_HOME}/staticfiles
 
 COPY --from=python-build-stage /usr/src/app/wheels /wheels/
 
@@ -72,9 +71,9 @@ RUN mkdir -p ${APP_HOME}/staticfiles/admin && \
     mkdir -p ${APP_HOME}/staticfiles/drf-yasg
 
 
-# RUN chown django:django ${APP_HOME}
-RUN chown -R django:django ${APP_HOME}/staticfiles && chmod -R 777 ${APP_HOME}/staticfiles
+# The entrypoint script will now handle permissions for the mounted volume
+# RUN chown -R django:django ${APP_HOME}/staticfiles && chmod -R 777 ${APP_HOME}/staticfiles
 USER django
-#RUN pip install --no-cache-dir -r ./requirements/local.txt
+RUN pip install --no-cache-dir -r ./requirements.txt
 
 ENTRYPOINT [ "/entrypoint" ]

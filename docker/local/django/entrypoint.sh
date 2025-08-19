@@ -1,11 +1,11 @@
 #!/bin/bash
 
 set -o errexit
-
 set -o pipefail
-
 set -o nounset
 
+# Workaround for volume mount permission issues
+sudo chown -R django:django /app/staticfiles
 
 python << END
 import sys
@@ -26,7 +26,7 @@ while True:
   except psycopg2.OperationalError as error:
       sys.stderr.write("Waiting for PostgreSQL to become available...\n")
       if time.time() - start > suggest_unrecoverable_after:
-        sys.stderr.write(" This is taking longer than expected. The following exception may be indicative of an unrecoverable error: '{}'\n".format(error))
+        sys.stderr.write(" This is taking longer than expected. The following exception may be indicative of an unrecoverable error: \'{}'\n".format(error))
         time.sleep(1)
 END
 

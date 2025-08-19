@@ -4,7 +4,8 @@ django-admin startproject config .
 chore: initialize django project
 
 instalar pacotes
-pip install python-dotenv djangorestframework django-autoslug django-countries django-phonenumber-field phonenumbers drf-yasg pillow argon2-cffi djoser django-taggit django-filter django-celery-email cloudinary django-celery-beat redis celery flower 
+pip install python-dotenv djangorestframework django-autoslug django-countries django-phonenumber-field
+phonenumbers drf-yasg pillow argon2-cffi djoser django-taggit django-filter django-celery-email cloudinary django-celery-beat redis celery flower
 #dev
 pip install psycopg2-binary watchfiles black
 
@@ -59,11 +60,11 @@ docker volume ls
 docker volume inspect api_logs_store
 docker run -it --rm -v api_logs_store:/dados alpine ls /dados
 docker run -it --rm -v api_logs_store:/dados alpine sh
-Copiar para maquina local
+#Copiar para maquina local
 docker run --rm -v api_logs_store:/dados -v $(pwd)/backup:/backup alpine cp -r /dados/. /backup/
 
 # run comands django
-create app
+#create app
 docker compose -f local.yml run --rm api python manager.py startapp reports
 
 ERRO PERMISSAO

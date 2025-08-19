@@ -1,0 +1,8 @@
+via docker http://127.0.0.1:8080/
+http://127.0.0.1:8080/supersecretadmin
+
+Celery FLower
+http://127.0.0.1:5555/
+
+Mailpit
+http://127.0.0.1:8025/
