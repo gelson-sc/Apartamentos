@@ -1,6 +1,6 @@
-FROM docker.io/node:20.11-alpine3.18 AS base
+FROM docker.io/node:20.11-alpine3.18 as base
 
-FROM base AS node-build-stage
+FROM base as node-build-stage
 
 RUN apk add --no-cache libc6-compat
 
@@ -13,28 +13,22 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
-FROM base AS node-run-stage
+FROM base as node-run-stage
 
 ARG APP_HOME=/app
-
+WORKDIR ${APP_HOME}
 
 COPY --from=node-build-stage /node_modules ./node_modules
 
 COPY . ${APP_HOME}
 
-RUN mkdir -p /app/.next && \
-    chown -R node:node /app/.next
-WORKDIR ${APP_HOME}
-
 RUN addgroup -g 1001 -S nodejs && \
   adduser -S nextjs -u 1001 -G nodejs
 
-RUN chown -R node:node ${APP_HOME}
+RUN chown -R nextjs:nodejs ${APP_HOME}
 
+USER nextjs
 
-
-USER node
-EXPOSE 3000
 CMD [ "npm","run","dev" ]
 
 

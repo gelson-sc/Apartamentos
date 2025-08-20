@@ -59,6 +59,7 @@ services:
       dockerfile: ./docker/local/Dockerfile
     container_name: apart_client
     image: apart_client
+    user: "1000:1000"
     environment:
       - HOSTNAME=0.0.0.0
     #    ports:
